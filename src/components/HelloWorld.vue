@@ -10,7 +10,8 @@
         <h6>Projects:</h6>
         <ul v-if="artist.attributes.projects.data.length">
           <li v-for="project in artist.attributes.projects.data" v-bind:key="project.id">
-            <span>{{ project.attributes.name }}</span>
+            <p>{{ project.attributes.name }}</p>
+            <img v-if="project.attributes.cover.data.attributes.url" :src="'http://localhost:1337' + project.attributes.cover.data.attributes.url" />
           </li>
         </ul>
         <span v-else>No projects</span>
@@ -23,7 +24,7 @@
 import axios from 'axios'
 
 export default {
-  name: 'App',
+  name: 'Artists',
   data () {
     return {
       artists: [],
@@ -32,7 +33,7 @@ export default {
   },
   async mounted () {
     try {
-      const { data } = await axios.get(`http://localhost:1337/api/artists?populate=projects`)
+      const { data } = await axios.get(`http://localhost:1337/api/artists?populate[projects][populate]=*`)
       this.artists = data.data;
       console.log(data.data);
     } catch (error) {
@@ -45,5 +46,9 @@ export default {
 <style scoped>
 ul {
   text-align: left;
+}
+
+img {
+  max-width: 200px;
 }
 </style>
